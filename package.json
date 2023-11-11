@@ -1,0 +1,20 @@
+{
+  "name": "codinho",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "rollup -c -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "blockly": "^10.2.2"
+  },
+  "devDependencies": {
+    "rollup": "^4.3.0",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-serve": "^2.0.2"
+  }
+}
