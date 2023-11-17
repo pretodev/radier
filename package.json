@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@blockly/block-plus-minus": "^6.0.7",
     "blockly": "^10.2.2"
   },
   "devDependencies": {
