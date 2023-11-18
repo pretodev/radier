@@ -10,11 +10,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@blockly/block-plus-minus": "^6.0.7",
-    "blockly": "^10.2.2"
-  },
   "devDependencies": {
+    "blockly": "^10.2.2",
     "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.3",
     "source-map-loader": "^4.0.1",

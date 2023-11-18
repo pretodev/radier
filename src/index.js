@@ -1,30 +1,46 @@
 import * as Blockly from 'blockly'
 import toolbox from './toolbox'
-import '@blockly/block-plus-minus'
-import * as input from './io/input'
-import { buildMainBlock } from './blocks/main'
 import './index.css'
+import './plugin/blocks/main_statement'
 
-// elements
-const blocklyDiv = document.getElementById('block-editor')
-const inputEditor = document.getElementById('input-editor')
+/**
+ * Create a workspace
+ * @param {HTMLElement} blockDiv
+ * @param {!Blockly.BlocklyOptions} options
+ * @returns {Blockly.WorkspaceSvg}
+ */
+function createWorkspace(blockDiv, options) {
+    const ws = Blockly.inject(blockDiv, options)
+    Blockly.serialization.workspaces.load(startBlocks, ws)
+    return ws
+}
 
-// blockly setup
-const ws = Blockly.inject(blocklyDiv, { toolbox })
-const mainBlock = buildMainBlock(ws)
-console.log(mainBlock)
-
-// events
-inputEditor.addEventListener('input', (event) => {
-    try {
-        inputEditor.classList.remove('error')
-        const content = event.target.value
-        if (!content) {
-            return
-        }
-        const types = input.fromString(content)
-        console.log(types)
-    } catch (e) {
-        inputEditor.classList.add('error')
+const startBlocks = {
+    blocks: {
+        languageVersion: 0,
+        blocks: [
+            {
+                type: "main_statement",
+                x: 20,
+                y: 20,
+                deletable: false,
+                movable: false,
+                extraState: {
+                    params: [
+                        { name: "peso", type: 'number' },
+                        { name: "altura", type: 'number' },
+                        { name: "nome", type: 'string', value: 'Silas Ribeiro' }
+                    ]
+                },
+            },
+        ],
     }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const defaultOptions = { toolbox }
+    createWorkspace(
+        document.getElementById('block-editor'),
+        defaultOptions
+    )
 })
