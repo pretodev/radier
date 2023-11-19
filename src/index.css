@@ -43,28 +43,41 @@ table {
     border-spacing: 0;
 }
 
-.header {
+.app-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
-  justify-content: space-between;
+  overflow: visible;
+  background-color: #12b5cd;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.3);
+  margin: 10px;
 }
 
-.io-section {
-  display: flex;
-  flex-direction: row;
+.app-section {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
 }
 
-.io-section > div {
-  flex: 1;
-  padding: 10px;
+.app-editor {
+  left: 8px;
+  right: 315px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-.io-section .io-section__output {
-  background-color: #eee;
-  border: 1px solid #ccc;
-  padding: 10px;
-  min-height: 200px;
+.app-code {
+  right: 8px;
+  width: 280px;
+  background-color: #fff;
+  overflow: scroll;
+  padding: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-.error {
-  border: 1px solid red;
+.app-code pre{
+  padding: 0;
+  border: none;
 }

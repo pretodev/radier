@@ -1,5 +1,4 @@
 import Blockly from 'blockly/core'
-import { createPlusField } from './fields/field_plus'
 import * as VariableType from '../variable_type'
 
 delete Blockly.Blocks['main_statement']
@@ -38,11 +37,15 @@ const statementMutator = {
                 state['params'].push({
                     id: model.getId(),
                     name: model.name,
+                    type: model.type,
+                    value: model.value,
                     argId: arg.argId
                 })
             }
         }
+        console.log('saveExtraState', this.argData_)
         return state
+
     },
 
     /**
@@ -57,6 +60,7 @@ const statementMutator = {
         }))
 
         this.updateShape_(params)
+        console.log('loadExtraState', this.argData_)
     },
 
     /**
@@ -81,10 +85,14 @@ const statementMutator = {
         name = name || Blockly.Variables.generateUniqueNameFromOptions(Blockly.Procedures.DEFAULT_ARG, argNames)
         argId = argId || Blockly.utils.idGenerator.genUid()
         this.addInput_(name, argId)
+
+        const variable = Blockly.Variables.getOrCreateVariablePackage(this.workspace, id, name, type)
+
         this.argData_.push({
-            model: Blockly.Variables.getOrCreateVariablePackage(this.workspace, id, name, type),
+            model: variable,
             argId: argId
         })
+        console.log('addArg_', this.argData_)
     },
 
     /**
@@ -116,13 +124,16 @@ const statementMutator = {
             }
             this.argData_ = this.argData_.filter(arg => arg.argId !== argId)
         }
+        console.log('removeArg_', this.argData_)
     },
 
     updateShape_: function (params) {
         for (let i = this.argData_.length - 1; i >= 0; i--) {
             this.removeArg_(this.argData_[i].argId)
         }
-        this.argData_ = params.map(params => this.addArg_(params))
+        this.argData_ = [];
+        params.forEach(params => this.addArg_(params))
+        console.log('updateShape_', this.argData_)
     },
 }
 

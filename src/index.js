@@ -1,7 +1,17 @@
 import * as Blockly from 'blockly'
 import toolbox from './toolbox'
+import locale from 'blockly/msg/pt-br'
+import { javascriptGenerator } from 'blockly/javascript'
+
+import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript';
+
 import './index.css'
 import './plugin/blocks/main_statement'
+import './plugin/generators/main_statement'
+import 'highlight.js/styles/atom-one-dark.css';
+
+
 
 /**
  * Create a workspace
@@ -10,6 +20,7 @@ import './plugin/blocks/main_statement'
  * @returns {Blockly.WorkspaceSvg}
  */
 function createWorkspace(blockDiv, options) {
+    Blockly.setLocale(locale)
     const ws = Blockly.inject(blockDiv, options)
     Blockly.serialization.workspaces.load(startBlocks, ws)
     return ws
@@ -37,10 +48,23 @@ const startBlocks = {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const defaultOptions = { toolbox }
-    createWorkspace(
-        document.getElementById('block-editor'),
-        defaultOptions
-    )
-})
+const codeViewEl = document.getElementById('app-code-view')
+
+hljs.registerLanguage('javascript', javascript);
+
+document
+    .addEventListener('DOMContentLoaded', function () {
+        const defaultOptions = { toolbox }
+        createWorkspace(
+            document.getElementById('block-editor'),
+            defaultOptions
+        )
+    })
+
+document
+    .getElementById('generate-code')
+    .addEventListener('change', function (event) {
+        const language = event.target.value
+        const code = javascriptGenerator.workspaceToCode(Blockly.getMainWorkspace())
+        codeViewEl.innerHTML = hljs.highlight(code, { language: 'javascript' }).value
+    })

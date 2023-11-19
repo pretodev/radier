@@ -4,25 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Codinho</title>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 </head>
 <body>
-<div class="header" style="margin: 16px">
-    <div class="header__title">
-        <h3>Codinho</h3>
-        <p>Um editor de código visual</p>
-    </div>
-    <div class="header_leading">
-        <button id="run">Executar</button>
+<div class="app-container">
+    <div class="app-section app-editor" id="block-editor"></div>
+    <div class="app-section app-code">
+        <select id="generate-code">
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="dart">Dart</option>
+        </select>
+        <hr>
+        <pre class="theme-atom-one-dark shadow-3xl text-sm relative overflow-hidden max-w-full mb-6"><code id="app-code-view"></code></pre>
     </div>
 </div>
-
-<div id="block-editor" style="height: 480px; width: 100%;"></div>
-
-<xml xmlns="https://developers.google.com/blockly/xml" id="workspace-blocks" style="display: none">
-    <block type="procedures_defnoreturn" x="20" y="20" deletable="false" movable="false">
-        <field name="NAME">Programa</field>
-    </block>
-</xml>
 
 </body>
 </html>
