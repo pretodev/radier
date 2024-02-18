@@ -10,7 +10,7 @@ import './index.css'
 import './plugin/blocks/main_statement'
 import './plugin/generators/main_statement'
 import 'highlight.js/styles/atom-one-dark.css';
-
+import './blocks/print_block'
 
 
 /**

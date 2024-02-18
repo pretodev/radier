@@ -137,9 +137,9 @@ export default {
                 },
                 {
                     'kind': 'block',
-                    'type': 'text_print',
+                    'type': 'print_block',
                     'inputs': {
-                        'TEXT': {
+                        'VALUE': {
                             'shadow': {
                                 'type': 'text',
                                 'fields': {
@@ -149,20 +149,6 @@ export default {
                         }
                     },
                 },
-                {
-                    'kind': 'block',
-                    'type': 'text_prompt_ext',
-                    'inputs': {
-                        'TEXT': {
-                            'shadow': {
-                                'type': 'text',
-                                'fields': {
-                                    'TEXT': 'abc'
-                                }
-                            }
-                        }
-                    }
-                }
             ]
         },
         {
