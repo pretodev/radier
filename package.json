@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "blockly": "^10.2.2",
+    "blockly": "^10.4.1",
     "css-loader": "^6.8.1",
     "highlight.js": "^11.9.0",
     "html-webpack-plugin": "^5.5.3",
