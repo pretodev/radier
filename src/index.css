@@ -1,83 +1,195 @@
-/* CSS Reset */
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-    display: block;
-}
+@import url('https://fonts.googleapis.com/css?family=Google+Sans:400,500');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 body {
-    line-height: 1;
-}
-ol, ul {
-    list-style: none;
-}
-blockquote, q {
-    quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-    content: '';
-    content: none;
-}
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
+  background: #202020 !important;
+  margin: 0;
+  position: relative;
 }
 
 .app-container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  --bg: white;
+  --blockly-margin: 28px 0 28px 28px;
+  --demo-height: 100vh;
+  --font-family: 'Google Sans';
+  --output-max-height: 100%;
+  --output-max-width: 392px;
+  --play-btn-right: 52px;
+  --play-btn-top: 40px;
+  --select-next-line: none;
+}
+
+@media screen and (max-width: 840px) {
+  .app-container {
+    --blockly-height: 100%;
+    --blockly-margin: 28px 28px 0;
+    --demo-height: 600px;
+    --output-max-height: 180px;
+    --output-max-width: 100%;
+    --output-min-width: unset;
+    --play-btn-right: 64px;
+    --play-btn-top: 404px;
+    align-items: center;
+    flex-direction: column;
+    padding-inline: 40px;
+    --select-next-line: block;
+  }
+}
+
+.app-container {
+  background-color: #202020;
+  border-radius: 30px;
   display: flex;
+  height: var(--demo-height);
   overflow: visible;
-  background-color: #12b5cd;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.3);
-  margin: 10px;
+  width: 100%;
 }
 
-.app-section {
-  position: absolute;
-  top: 8px;
-  bottom: 8px;
+#blocklyDiv {
+  background: var(--bg);
+  height: var(--blockly-height);
+  margin: var(--blockly-margin);
+  padding: 20px;
+  width: 100%;
 }
 
-.app-editor {
-  left: 8px;
-  right: 315px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+.blocklyToolboxDiv {
+  background-color: var(--bg);
 }
 
-.app-code {
-  right: 8px;
-  width: 280px;
-  background-color: #fff;
+.blocklyTreeRow {
+  height: 15px;
+  line-height: 15px;
+}
+
+.blocklyTreeRowContentContainer {
+  border-left: 20px;
+}
+
+.blocklyTreeIcon {
+  width: 8px;
+}
+
+.blocklyTreeLabel,
+select,
+option {
+  font-family: var(--font-family) !important;
+}
+
+#blockly-0 {
+  border-left: 15px solid #d1c4e9 !important;
+}
+
+#blockly-1 {
+  border-left: 15px solid #a5d6a7 !important;
+}
+
+#blockly-2 {
+  border-left: 15px solid #4285f4 !important;
+}
+
+#blockly-3 {
+  border-left: 15px solid #ffca28 !important;
+}
+
+#blockly-4 {
+  border-left: 15px solid #4db6ac !important;
+}
+
+#blockly-5 {
+  border-left: 15px solid #ffcdd2 !important;
+}
+
+#blockly-7 {
+  border-left: 15px solid #ef9a9a !important;
+}
+
+#blockly-8 {
+  border-left: 15px solid #d7ccc8 !important;
+}
+
+.blocklyTreeSeparator {
+  border-bottom: unset;
+}
+
+.blocklyMainBackground,
+.blocklyPath {
+  stroke: var(--bg);
+}
+
+.blocklyText {
+  fill: black !important;
+  font: 400 16px var(--font-family) !important;
+}
+
+#outputDiv {
+  background-color: var(--bg);
+  height: var(--blockly-height);
+  margin: 28px;
+  max-height: var(--output-max-height);
+  max-width: var(--output-max-width);
   overflow: scroll;
-  padding: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  padding: 20px;
+  width: 100%;
 }
 
-.app-code pre{
-  padding: 0;
+hr {
+  border: 0;
+  clear: both;
+  height: 1px;
+}
+
+.next-line {
+  display: var(--select-next-line);
+}
+
+.play-button {
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #1a73e8;
+  cursor: pointer;
+  display: inline-block;
+  font: 500 14px/36px var(--font-family);
+  padding: 0 16px;
+  position: absolute;
+  right: var(--play-btn-right);
+  top: var(--play-btn-top);
+}
+
+.play-button:hover {
+  background: #e8f0fe;
+  border: 1px solid #d2e3fc;
+}
+
+.play-button .material-icons {
+  cursor: default;
+  font-size: 18px;
+  height: 18px;
+  margin: 0 8px 0 -4px;
+  pointer-events: none;
+  position: relative;
+  top: -1px;
+  vertical-align: middle;
+  width: 18px;
+}
+
+/* Prettify adds some unwanted styles - clobber them. */
+#codeHolder {
   border: none;
+  padding-inline: 20px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 6px 28px;
+  margin: 0;
+  color: white;
+}
+
+.footer a {
+  color: white;
+  text-decoration: none;
 }

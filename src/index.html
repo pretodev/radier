@@ -1,24 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Codinho</title>
-    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codinho</title>
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 </head>
+
 <body>
-<div class="app-container">
-    <div class="app-section app-editor" id="block-editor"></div>
-    <div class="app-section app-code">
-        <select id="generate-code">
-            <option value="javascript">JavaScript</option>
-            <option value="python">Python</option>
-            <option value="dart">Dart</option>
-        </select>
-        <hr>
-        <pre class="theme-atom-one-dark shadow-3xl text-sm relative overflow-hidden max-w-full mb-6"><code id="app-code-view"></code></pre>
+  <div class="app-container">
+    <div id="blocklyDiv" class="main"></div>
+    <div id="outputDiv" class="main">
+      <select id="generateDropdown">
+        <option value="javascript">JavaScript</option>
+        <option value="python">Python</option>
+        <option value="php">PHP</option>
+        <option value="lua">Lua</option>
+        <option value="dart">Dart</option>
+      </select>
+      <br class="next-line" />
+      <pre id="codeHolder" class="prettyprint" dir="ltr"></pre>
     </div>
-</div>
+    <div id="playButton" class="play-button">
+      <span class="material-icons" aria-hidden="true">play_circle_outlined</span>Run
+    </div>
+  </div>
+  <p class="footer"> Desenvolvidor por <a href="https://github.com/pretodev" target="_blank" >Silas Ribeiro</a>. <a href="https://github.com/pretodev/codinho" target="_blank">Clique aqui</a> para acessar o código </p>
 
 </body>
+
 </html>

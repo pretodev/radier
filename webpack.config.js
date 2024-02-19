@@ -31,6 +31,11 @@ const config = {
             template: 'src/index.html',
         }),
     ],
+    resolve: {
+        fallback: {
+            "vm": false // Isso efetivamente ignora o módulo 'vm'
+        }
+    }
 };
 
 module.exports = (env, argv) => {

@@ -1,0 +1,45 @@
+/*! ../original-repo/acorn */
+
+/*! ../original-repo/interpreter */
+
+/*! vm */
+
+/*!*********************!*\
+  !*** external "vm" ***!
+  \*********************/
+
+/*!*******************************!*\
+  !*** ./src/js-interpreter.js ***!
+  \*******************************/
+
+/*!********************************!*\
+  !*** ./original-repo/acorn.js ***!
+  \********************************/
+
+/*!**************************************!*\
+  !*** ./original-repo/interpreter.js ***!
+  \**************************************/
+
+/**
+ * @license
+ * Copyright 2012 Marijn Haverbeke
+ * SPDX-License-Identifier: MIT
+ */
+
+/**
+ * @license
+ * Copyright 2013 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
