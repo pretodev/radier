@@ -8,11 +8,17 @@ import { phpGenerator } from 'blockly/php'
 import { dartGenerator } from 'blockly/dart'
 import Interpreter from 'js-interpreter'
 
+import * as Console from './console'
 import './index.css'
 
 document.addEventListener('DOMContentLoaded', createWorkspace)
-document.getElementById('playButton').addEventListener('click', execute)
-document.getElementById('generateDropdown').addEventListener('change', regenerate)
+document.getElementById('playButton').addEventListener('click', () => {
+  Console.clear()
+  execute()
+})
+// document.getElementById('generateDropdown').addEventListener('change', regenerate)
+
+Console.attach('console-content')
 
 /**
  * Initialize the page once everything is loaded.
@@ -113,7 +119,7 @@ function createWorkspace() {
     },
   });
   Blockly.serialization.workspaces.load(startBlocks, workspace);
-  workspace.addChangeListener(regenerate);
+  // workspace.addChangeListener(regenerate);
 }
 
 /**
@@ -139,44 +145,45 @@ function regenerate(_e) {
   }
 }
 
+
 /**
  * Generate JavaScript from the blocks, then execute it using JS-Interpreter.
  */
 function execute() {
-  const initFunc = function (interpreter, globalObject) {
-    const alertWrapper = function alert(text) {
-      return window.alert(arguments.length ? text : '');
+  const initFunc = function(interpreter, globalObject) {
+    // Define uma função assíncrona personalizada para o prompt
+    const promptWrapper = function(text, callback) {
+      text = text ? text.toString() : '';
+      Console.input(text).then(response => {
+        callback(response);
+      });
     };
-    interpreter.setProperty(
-      globalObject,
-      'alert',
-      interpreter.createNativeFunction(alertWrapper),
-    );
 
-    const promptWrapper = function prompt(text, defaultValue) {
-      return window.prompt(
-        arguments.length > 0 ? text : '',
-        arguments.length > 1 ? defaultValue : '',
-      );
+    // Configura o prompt como uma função assíncrona no interpretador
+    interpreter.setProperty(globalObject, 'prompt', interpreter.createAsyncFunction(promptWrapper));
+
+    // Configura o alert de forma síncrona, pois não requer operações assíncronas
+    const alertWrapper = function(text) {
+      text = text ? text.toString() : '';
+      Console.print(text);
     };
-    interpreter.setProperty(
-      globalObject,
-      'prompt',
-      interpreter.createNativeFunction(promptWrapper),
-    );
+    interpreter.setProperty(globalObject, 'alert', interpreter.createNativeFunction(alertWrapper));
   };
 
-  const code = javascriptGenerator.workspaceToCode(
-    Blockly.getMainWorkspace(),
-  );
+  const code = javascriptGenerator.workspaceToCode(Blockly.getMainWorkspace());
   const myInterpreter = new Interpreter(code, initFunc);
-  let stepsAllowed = 10000;
-  while (myInterpreter.step() && stepsAllowed) {
-    stepsAllowed--;
+
+  function nextStep() {
+    try {
+      if (myInterpreter.step()) {
+        setTimeout(nextStep, 0);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
-  if (!stepsAllowed) {
-    throw EvalError('Infinite loop.');
-  }
+
+  nextStep();
 }
 
 /**

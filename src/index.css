@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Google+Sans:400,500');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css?family=JetBrains+Mono:100..800');
+
 
 body {
   background: #202020 !important;
@@ -122,8 +124,8 @@ option {
   font: 400 16px var(--font-family) !important;
 }
 
-#outputDiv {
-  background-color: var(--bg);
+.left-panel {
+  background-color: rgb(22 30 41);
   height: var(--blockly-height);
   margin: 28px;
   max-height: var(--output-max-height);
@@ -152,9 +154,9 @@ hr {
   display: inline-block;
   font: 500 14px/36px var(--font-family);
   padding: 0 16px;
-  position: absolute;
-  right: var(--play-btn-right);
-  top: var(--play-btn-top);
+  /* position: absolute; */
+  /* right: var(--play-btn-right); */
+  /* top: var(--play-btn-top); */
 }
 
 .play-button:hover {
@@ -192,4 +194,20 @@ hr {
 .footer a {
   color: white;
   text-decoration: none;
+}
+
+
+.console-panel {
+  padding: 1.5em 0;
+  font-family: JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+  font-size: 12px;
+  line-height: 18px;
+  color: rgb(164 175 189);
+}
+
+
+.console-line input {
+  background: transparent;
+  border: none;
+  color: #fff;
 }
