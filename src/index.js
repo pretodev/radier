@@ -8,8 +8,10 @@ import { phpGenerator } from 'blockly/php'
 import { dartGenerator } from 'blockly/dart'
 import Interpreter from 'js-interpreter'
 
+import './main_statement'
 import * as Console from './console'
 import './index.css'
+import {DisableTopBlocks} from './disable_top_blocks'
 
 document.addEventListener('DOMContentLoaded', createWorkspace)
 document.getElementById('playButton').addEventListener('click', () => {
@@ -19,6 +21,8 @@ document.getElementById('playButton').addEventListener('click', () => {
 // document.getElementById('generateDropdown').addEventListener('change', regenerate)
 
 Console.attach('console-content')
+
+
 
 /**
  * Initialize the page once everything is loaded.
@@ -119,6 +123,13 @@ function createWorkspace() {
     },
   });
   Blockly.serialization.workspaces.load(startBlocks, workspace);
+
+  workspace.addChangeListener(Blockly.Events.disableOrphans);
+
+  // The plugin must be initialized before it has any effect.
+  const disableTopBlocksPlugin = new DisableTopBlocks();
+  disableTopBlocksPlugin.init();
+  
   // workspace.addChangeListener(regenerate);
 }
 
@@ -204,84 +215,88 @@ const generators = {
 const startBlocks = {
   blocks: {
     languageVersion: 0,
-    blocks: [
-      {
-        type: 'variables_set',
-        x: 10,
-        y: 10,
-        fields: {
-          VAR: { id: 'Count' },
-        },
-        inputs: {
-          VALUE: {
-            block: {
-              type: 'math_number',
-              fields: { NUM: 1 },
+    blocks: [{
+      type: 'main_statement',
+      x: 10,
+      y: 10,
+      deletable: false,
+      next: {
+        block: {
+          type: 'variables_set',
+          fields: {
+            VAR: { id: 'Count' },
+          },
+          inputs: {
+            VALUE: {
+              block: {
+                type: 'math_number',
+                fields: { NUM: 1 },
+              },
             },
           },
-        },
-        next: {
-          block: {
-            type: 'controls_whileUntil',
-            fields: { MODE: 'WHILE' },
-            inputs: {
-              BOOL: {
-                block: {
-                  type: 'logic_compare',
-                  fields: { OP: 'LTE' },
-                  inputs: {
-                    A: {
-                      block: {
-                        type: 'variables_get',
-                        fields: {
-                          VAR: { id: 'Count' },
+          next: {
+            block: {
+              type: 'controls_whileUntil',
+              fields: { MODE: 'WHILE' },
+              inputs: {
+                BOOL: {
+                  block: {
+                    type: 'logic_compare',
+                    fields: { OP: 'LTE' },
+                    inputs: {
+                      A: {
+                        block: {
+                          type: 'variables_get',
+                          fields: {
+                            VAR: { id: 'Count' },
+                          },
                         },
                       },
-                    },
-                    B: {
-                      block: {
-                        type: 'math_number',
-                        fields: { NUM: 3 },
+                      B: {
+                        block: {
+                          type: 'math_number',
+                          fields: { NUM: 3 },
+                        },
                       },
                     },
                   },
                 },
-              },
-              DO: {
-                block: {
-                  type: 'text_print',
-                  inputs: {
-                    TEXT: {
-                      block: {
-                        type: 'text',
-                        fields: { TEXT: 'Hello World!' },
+                DO: {
+                  block: {
+                    type: 'text_print',
+                    inputs: {
+                      TEXT: {
+                        block: {
+                          type: 'text',
+                          fields: { TEXT: 'Hello World!' },
+                        },
                       },
                     },
-                  },
-                  next: {
-                    block: {
-                      type: 'variables_set',
-                      fields: {
-                        VAR: { id: 'Count' },
-                      },
-                      inputs: {
-                        VALUE: {
-                          block: {
-                            type: 'math_arithmetic',
-                            fields: { OP: 'ADD' },
-                            inputs: {
-                              A: {
-                                block: {
-                                  type: 'variables_get',
-                                  fields: {
-                                    VAR: { id: 'Count' },
+                    next: {
+                      block: {
+                        type: 'variables_set',
+                        fields: {
+                          VAR: { id: 'Count' },
+                        },
+                        inputs: {
+                          VALUE: {
+                            block: {
+                              type: 'math_arithmetic',
+                              fields: { OP: 'ADD' },
+                              inputs: {
+                                A: {
+                                  block: {
+                                    type: 'variables_get',
+                                    fields: {
+                                      VAR: { id: 'Count' },
+                                    },
                                   },
                                 },
-                              },
-                              B: {
-                                block: {
-                                  type: 'math_number',
-                                  fields: { NUM: 1 },
+                                B: {
+                                  block: {
+                                    type: 'math_number',
+                                    fields: { NUM: 1 },
+                                  },
                                 },
                               },
                             },
@@ -296,6 +311,7 @@ const startBlocks = {
           },
         },
       },
+    },
     ],
   },
   variables: [
