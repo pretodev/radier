@@ -130,7 +130,6 @@ option {
   margin: 28px;
   max-height: var(--output-max-height);
   max-width: var(--output-max-width);
-  overflow: scroll;
   padding: 20px;
   width: 100%;
 }
