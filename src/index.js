@@ -15,6 +15,7 @@ import { DisableTopBlocks } from './disable_top_blocks'
 
 let currentInterpreter = null;
 let isExecuting = false;
+let userInputs = [];
 
 document.addEventListener('DOMContentLoaded', createWorkspace)
 document.getElementById('playButton').addEventListener('click', () => {
@@ -23,6 +24,19 @@ document.getElementById('playButton').addEventListener('click', () => {
 })
 document.getElementById('stopButton').addEventListener('click', () => {
   stopExecution()
+})
+
+// Input management event listeners
+document.getElementById('addInputButton').addEventListener('click', openInputModal)
+document.getElementById('closeModal').addEventListener('click', closeInputModal)
+document.getElementById('cancelInput').addEventListener('click', closeInputModal)
+document.getElementById('confirmInput').addEventListener('click', addInput)
+
+// Close modal when clicking outside
+document.getElementById('inputModal').addEventListener('click', (e) => {
+  if (e.target.id === 'inputModal') {
+    closeInputModal()
+  }
 })
 // document.getElementById('generateDropdown').addEventListener('change', regenerate)
 
@@ -172,7 +186,7 @@ function execute() {
   }
 
   isExecuting = true;
-  updateButtonStates();
+  updateButtonVisibility();
 
   const initFunc = function(interpreter, globalObject) {
     // Define uma função assíncrona personalizada para o prompt
@@ -192,6 +206,11 @@ function execute() {
       Console.print(text);
     };
     interpreter.setProperty(globalObject, 'alert', interpreter.createNativeFunction(alertWrapper));
+    
+    // Add user inputs to global scope
+    userInputs.forEach(input => {
+      interpreter.setProperty(globalObject, input.name, interpreter.nativeToPseudo(input.value));
+    });
   };
 
   const code = javascriptGenerator.workspaceToCode(Blockly.getMainWorkspace());
@@ -218,26 +237,133 @@ function execute() {
  * Stop the current execution.
  */
 function stopExecution() {
+  if (currentInterpreter) {
+    currentInterpreter = null;
+  }
   isExecuting = false;
-  currentInterpreter = null;
-  updateButtonStates();
+  updateButtonVisibility();
 }
 
-/**
- * Update button visibility based on execution state.
- */
-function updateButtonStates() {
+function updateButtonVisibility() {
   const playButton = document.getElementById('playButton');
   const stopButton = document.getElementById('stopButton');
   
   if (isExecuting) {
     playButton.style.display = 'none';
-    stopButton.style.display = 'inline-block';
+    stopButton.style.display = 'flex';
   } else {
-    playButton.style.display = 'inline-block';
+    playButton.style.display = 'flex';
     stopButton.style.display = 'none';
   }
 }
+
+// Input Management Functions
+function openInputModal() {
+  const modal = document.getElementById('inputModal');
+  const inputName = document.getElementById('inputName');
+  const inputType = document.getElementById('inputType');
+  
+  // Reset form
+  inputName.value = '';
+  inputType.value = 'text';
+  
+  modal.style.display = 'block';
+  inputName.focus();
+}
+
+function closeInputModal() {
+  const modal = document.getElementById('inputModal');
+  modal.style.display = 'none';
+}
+
+function addInput() {
+  const inputName = document.getElementById('inputName').value.trim();
+  const inputType = document.getElementById('inputType').value;
+  
+  if (!inputName) {
+    alert('Por favor, digite um nome para a entrada.');
+    return;
+  }
+  
+  // Check if input name already exists
+  if (userInputs.find(input => input.name === inputName)) {
+    alert('Já existe uma entrada com este nome.');
+    return;
+  }
+  
+  const inputData = {
+    id: Date.now().toString(),
+    name: inputName,
+    type: inputType,
+    value: getDefaultValue(inputType)
+  };
+  
+  userInputs.push(inputData);
+  renderInputs();
+  closeInputModal();
+}
+
+function getDefaultValue(type) {
+  switch (type) {
+    case 'text': return '';
+    case 'number': return 0;
+    case 'boolean': return false;
+    default: return '';
+  }
+}
+
+function removeInput(inputId) {
+  userInputs = userInputs.filter(input => input.id !== inputId);
+  renderInputs();
+}
+
+function renderInputs() {
+  const container = document.getElementById('inputsContainer');
+  container.innerHTML = '';
+  
+  userInputs.forEach(input => {
+    const inputItem = document.createElement('div');
+    inputItem.className = 'input-item';
+    
+    let inputElement;
+    if (input.type === 'boolean') {
+      inputElement = `<select onchange="updateInputValue('${input.id}', this.value)">
+        <option value="false" ${!input.value ? 'selected' : ''}>Falso</option>
+        <option value="true" ${input.value ? 'selected' : ''}>Verdadeiro</option>
+      </select>`;
+    } else {
+      const inputType = input.type === 'number' ? 'number' : 'text';
+      inputElement = `<input type="${inputType}" value="${input.value}" 
+        onchange="updateInputValue('${input.id}', this.value)" 
+        oninput="updateInputValue('${input.id}', this.value)">`;
+    }
+    
+    inputItem.innerHTML = `
+      <label>${input.name}:</label>
+      ${inputElement}
+      <button class="remove-input" onclick="removeInput('${input.id}')">Remover</button>
+    `;
+    
+    container.appendChild(inputItem);
+  });
+}
+
+function updateInputValue(inputId, value) {
+  const input = userInputs.find(input => input.id === inputId);
+  if (input) {
+    if (input.type === 'number') {
+      input.value = parseFloat(value) || 0;
+    } else if (input.type === 'boolean') {
+      input.value = value === 'true';
+    } else {
+      input.value = value;
+    }
+  }
+}
+
+// Make functions globally accessible
+window.updateInputValue = updateInputValue;
+window.removeInput = removeInput;
 
 /**
  * Object containing generators for different programming languages.
