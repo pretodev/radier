@@ -150,6 +150,9 @@ function createWorkspace() {
       snap: true,
     },
   });
+  
+  // Sync existing inputs with Blockly variables
+  syncInputsWithBlockly();
   Blockly.serialization.workspaces.load(startBlocks, workspace);
 
   workspace.addChangeListener(Blockly.Events.disableOrphans);
@@ -159,6 +162,17 @@ function createWorkspace() {
   disableTopBlocksPlugin.init();
   
   // workspace.addChangeListener(regenerate);
+}
+
+function syncInputsWithBlockly() {
+  // Create Blockly variables for all existing inputs
+  userInputs.forEach(input => {
+    const workspace = Blockly.getMainWorkspace();
+    const variable = workspace.getVariable(input.name);
+    if (!variable) {
+      createBlocklyVariable(input.name, input.type);
+    }
+  });
 }
 
 /**
@@ -215,10 +229,18 @@ function execute() {
     };
     interpreter.setProperty(globalObject, 'alert', interpreter.createNativeFunction(alertWrapper));
     
-    // Add user inputs to global scope
-    userInputs.forEach(input => {
-      interpreter.setProperty(globalObject, input.name, interpreter.nativeToPseudo(input.value));
-    });
+    // Add user inputs to the interpreter's global scope
+  userInputs.forEach(input => {
+    // Set the input value in the interpreter
+    interpreter.setProperty(globalObject, input.name, interpreter.nativeToPseudo(input.value));
+    
+    // Also ensure the variable exists in Blockly workspace
+    const workspace = Blockly.getMainWorkspace();
+    const variable = workspace.getVariable(input.name);
+    if (!variable) {
+      createBlocklyVariable(input.name, input.type);
+    }
+  });
   };
 
   const code = javascriptGenerator.workspaceToCode(Blockly.getMainWorkspace());
@@ -299,6 +321,13 @@ function addInput() {
     return;
   }
   
+  // Check if variable name already exists in Blockly
+  const workspace = Blockly.getMainWorkspace();
+  if (workspace.getVariable(inputName)) {
+    alert('Já existe uma variável com este nome no Blockly.');
+    return;
+  }
+  
   const inputData = {
     id: Date.now().toString(),
     name: inputName,
@@ -307,6 +336,10 @@ function addInput() {
   };
   
   userInputs.push(inputData);
+  
+  // Create a read-only variable in Blockly
+  createBlocklyVariable(inputName, inputType);
+  
   renderInputs();
   closeInputModal();
 }
@@ -321,6 +354,12 @@ function getDefaultValue(type) {
 }
 
 function removeInput(inputId) {
+  const inputToRemove = userInputs.find(input => input.id === inputId);
+  if (!inputToRemove) return;
+  
+  // Remove variable from Blockly and all blocks that use it
+  removeBlocklyVariable(inputToRemove.name);
+  
   userInputs = userInputs.filter(input => input.id !== inputId);
   renderInputs();
 }
@@ -372,6 +411,54 @@ function updateInputValue(inputId, value) {
 // Make functions globally accessible
 window.updateInputValue = updateInputValue;
 window.removeInput = removeInput;
+
+// Blockly Variable Management Functions
+function createBlocklyVariable(name, type) {
+  const workspace = Blockly.getMainWorkspace();
+  
+  // Create the variable in Blockly
+  const variable = workspace.createVariable(name, null, name);
+  
+  // Make the variable read-only by overriding the rename function
+  // This prevents users from changing the variable name through Blockly
+  const originalRename = variable.rename;
+  variable.rename = function(newName) {
+    // Prevent renaming of input variables
+    console.warn('Input variables cannot be renamed through Blockly. Use the inputs tab instead.');
+    return;
+  };
+  
+  // Mark this variable as an input variable for identification
+  variable.isInputVariable = true;
+  variable.inputType = type;
+}
+
+function removeBlocklyVariable(name) {
+  const workspace = Blockly.getMainWorkspace();
+  const variable = workspace.getVariable(name);
+  
+  if (!variable) return;
+  
+  // Find all blocks that use this variable
+  const blocksToRemove = [];
+  const allBlocks = workspace.getAllBlocks(false);
+  
+  allBlocks.forEach(block => {
+    // Check if block uses this variable
+    const fields = block.getVars();
+    if (fields.includes(name)) {
+      blocksToRemove.push(block);
+    }
+  });
+  
+  // Remove blocks that use this variable
+  blocksToRemove.forEach(block => {
+    block.dispose(true);
+  });
+  
+  // Delete the variable from workspace
+  workspace.deleteVariableById(variable.getId());
+}
 
 // Tab Management Functions
 function switchTab(tabName) {
