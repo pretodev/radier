@@ -13,10 +13,16 @@ import * as Console from './console'
 import './index.css'
 import { DisableTopBlocks } from './disable_top_blocks'
 
+let currentInterpreter = null;
+let isExecuting = false;
+
 document.addEventListener('DOMContentLoaded', createWorkspace)
 document.getElementById('playButton').addEventListener('click', () => {
   Console.clear()
   execute()
+})
+document.getElementById('stopButton').addEventListener('click', () => {
+  stopExecution()
 })
 // document.getElementById('generateDropdown').addEventListener('change', regenerate)
 
@@ -161,6 +167,13 @@ function regenerate(_e) {
  * Generate JavaScript from the blocks, then execute it using JS-Interpreter.
  */
 function execute() {
+  if (isExecuting) {
+    return; // Prevent multiple executions
+  }
+
+  isExecuting = true;
+  updateButtonStates();
+
   const initFunc = function(interpreter, globalObject) {
     // Define uma função assíncrona personalizada para o prompt
     const promptWrapper = function(text, callback) {
@@ -182,19 +195,48 @@ function execute() {
   };
 
   const code = javascriptGenerator.workspaceToCode(Blockly.getMainWorkspace());
-  const myInterpreter = new Interpreter(code, initFunc);
+  currentInterpreter = new Interpreter(code, initFunc);
 
   function nextStep() {
     try {
-      if (myInterpreter.step()) {
+      if (currentInterpreter && isExecuting && currentInterpreter.step()) {
         setTimeout(nextStep, 0);
+      } else {
+        // Execution finished or stopped
+        stopExecution();
       }
     } catch (e) {
       console.error(e);
+      stopExecution();
     }
   }
 
   nextStep();
+}
+
+/**
+ * Stop the current execution.
+ */
+function stopExecution() {
+  isExecuting = false;
+  currentInterpreter = null;
+  updateButtonStates();
+}
+
+/**
+ * Update button visibility based on execution state.
+ */
+function updateButtonStates() {
+  const playButton = document.getElementById('playButton');
+  const stopButton = document.getElementById('stopButton');
+  
+  if (isExecuting) {
+    playButton.style.display = 'none';
+    stopButton.style.display = 'inline-block';
+  } else {
+    playButton.style.display = 'inline-block';
+    stopButton.style.display = 'none';
+  }
 }
 
 /**
