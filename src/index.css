@@ -161,6 +161,8 @@ hr {
   display: inline-block;
   font: 500 14px/36px var(--font-family);
   padding: 0 16px;
+  justify-content: center;
+  align-items: center;
 }
 
 .play-button {
@@ -224,7 +226,7 @@ hr {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: calc(100% - 120px);
+  height: 100%;
 }
 
 .console-line input {
@@ -233,10 +235,69 @@ hr {
   color: #fff;
 }
 
+/* Tabs Container */
+.tabs-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.tabs-header {
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid #444;
+}
+
+.tab-button {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 12px 20px;
+  transition: all 0.3s;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-button.active {
+  color: #4285f4;
+  border-bottom-color: #4285f4;
+  background: rgba(66, 133, 244, 0.1);
+}
+
+.tab-content {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  overflow: hidden;
+}
+
+.tab-panel.active {
+  display: flex;
+  flex-direction: column;
+}
+
 /* Inputs Section */
 .inputs-section {
   padding: 1em 0 0.5em 0;
   border-bottom: 1px solid #444;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .add-input-button {

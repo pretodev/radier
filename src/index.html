@@ -34,14 +34,30 @@
               aria-hidden="true">stop_circle</span>Parar
           </div>
         </div>
-        <div class="inputs-section" id="inputs-section">
-          <button id="addInputButton" class="add-input-button">
-            <span class="material-icons" aria-hidden="true">add</span>Nova
-            entrada
-          </button>
-          <div id="inputsContainer" class="inputs-container"></div>
+
+        <div class="tabs-container">
+          <div class="tabs-header">
+            <button class="tab-button active"
+              data-tab="inputs">Entradas</button>
+            <button class="tab-button" data-tab="console">Console</button>
+          </div>
+
+          <div class="tab-content">
+            <div id="inputs-tab" class="tab-panel active">
+              <div class="inputs-section" id="inputs-section">
+                <button id="addInputButton" class="add-input-button">
+                  <span class="material-icons" aria-hidden="true">add</span>Nova
+                  entrada
+                </button>
+                <div id="inputsContainer" class="inputs-container"></div>
+              </div>
+            </div>
+
+            <div id="console-tab" class="tab-panel">
+              <div class="console-panel" id="console-content"></div>
+            </div>
+          </div>
         </div>
-        <div class="console-panel" id="console-content"></div>
       </div>
     </div>
     <p class="footer"> Desenvolvidor por <a href="https://github.com/pretodev"

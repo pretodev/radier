@@ -20,6 +20,7 @@ let userInputs = [];
 document.addEventListener('DOMContentLoaded', createWorkspace)
 document.getElementById('playButton').addEventListener('click', () => {
   Console.clear()
+  switchTab('console')
   execute()
 })
 document.getElementById('stopButton').addEventListener('click', () => {
@@ -37,6 +38,13 @@ document.getElementById('inputModal').addEventListener('click', (e) => {
   if (e.target.id === 'inputModal') {
     closeInputModal()
   }
+})
+
+// Tab management event listeners
+document.querySelectorAll('.tab-button').forEach(button => {
+  button.addEventListener('click', (e) => {
+    switchTab(e.target.dataset.tab)
+  })
 })
 // document.getElementById('generateDropdown').addEventListener('change', regenerate)
 
@@ -364,6 +372,21 @@ function updateInputValue(inputId, value) {
 // Make functions globally accessible
 window.updateInputValue = updateInputValue;
 window.removeInput = removeInput;
+
+// Tab Management Functions
+function switchTab(tabName) {
+  // Remove active class from all tab buttons and panels
+  document.querySelectorAll('.tab-button').forEach(button => {
+    button.classList.remove('active')
+  })
+  document.querySelectorAll('.tab-panel').forEach(panel => {
+    panel.classList.remove('active')
+  })
+  
+  // Add active class to selected tab button and panel
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active')
+  document.getElementById(`${tabName}-tab`).classList.add('active')
+}
 
 /**
  * Object containing generators for different programming languages.
