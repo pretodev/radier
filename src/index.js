@@ -1,6 +1,6 @@
 import * as Blockly from 'blockly'
 import toolboxJson from './toolbox'
-import locale from 'blockly/msg/pt-br'
+import * as locale from 'blockly/msg/pt-br'
 import { javascriptGenerator } from 'blockly/javascript'
 import { pythonGenerator } from 'blockly/python'
 import { luaGenerator } from 'blockly/lua'
@@ -11,7 +11,7 @@ import Interpreter from 'js-interpreter'
 import './main_statement'
 import * as Console from './console'
 import './index.css'
-import {DisableTopBlocks} from './disable_top_blocks'
+import { DisableTopBlocks } from './disable_top_blocks'
 
 document.addEventListener('DOMContentLoaded', createWorkspace)
 document.getElementById('playButton').addEventListener('click', () => {
